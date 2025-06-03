@@ -23,10 +23,10 @@ function FlappyBirdGame() {
   const [score, setScore] = useState(0);
   const [highScore, setHighScore] = useState(() => {
     const saved = localStorage.getItem('flappyBirdHighScore');
-    return saved ? parseInt(saved) : 0;
+    return saved ? parseInt(saved, 10) : 0;
   });
 
-  const gameLoopRef = useRef<number>();
+  const gameLoopRef = useRef<number | undefined>(undefined);
   const gameDataRef = useRef({
     bird: { x: 100, y: 250, velocity: 0 },
     pipes: [] as Array<{ x: number; topHeight: number; passed: boolean }>,
@@ -70,7 +70,7 @@ function FlappyBirdGame() {
         cancelAnimationFrame(gameLoopRef.current);
       }
     };
-  }, [gameState]);
+  }, []);
 
   const handleJump = () => {
     if (gameState === 'start') {
@@ -125,7 +125,7 @@ function FlappyBirdGame() {
     }
 
     // Update pipes
-    gameData.pipes.forEach((pipe, index) => {
+    gameData.pipes.forEach((pipe) => {
       pipe.x -= PIPE_SPEED;
       
       // Check if bird passed pipe for scoring
@@ -209,16 +209,16 @@ function FlappyBirdGame() {
 
   return (
     <div className="flex flex-col items-center gap-4">
-      <div className="not-prose bg-white p-4 rounded-lg shadow-lg">
+      <div className="not-prose bg-white p-4 rounded-lg shadow-lg relative">
         <canvas
           ref={canvasRef}
           width={CANVAS_WIDTH}
           height={CANVAS_HEIGHT}
-          className="border-2 border-gray-300 rounded cursor-pointer"
+          className="border-2 border-gray-300 rounded cursor-pointer block"
         />
         
         {gameState === 'start' && (
-          <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-50 rounded">
+          <div className="absolute top-4 left-4 right-4 bottom-4 flex items-center justify-center bg-black bg-opacity-50 rounded">
             <div className="text-center text-white">
               <h2 className="text-4xl font-bold mb-4">Ready to Fly?</h2>
               <p className="text-xl mb-2">Press SPACE or click to start</p>
@@ -228,7 +228,7 @@ function FlappyBirdGame() {
         )}
         
         {gameState === 'gameOver' && (
-          <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-50 rounded">
+          <div className="absolute top-4 left-4 right-4 bottom-4 flex items-center justify-center bg-black bg-opacity-50 rounded">
             <div className="text-center text-white">
               <h2 className="text-4xl font-bold mb-4">Game Over!</h2>
               <p className="text-2xl mb-2">Score: {score}</p>

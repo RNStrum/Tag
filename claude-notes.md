@@ -38,3 +38,4 @@
 
 ## Session Commits
 - 941acf6: init: gather requirements for Flappy Bird game
+- ae4b7e8: feat: implement complete Flappy Bird game
